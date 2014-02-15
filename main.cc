@@ -6,6 +6,7 @@
 using namespace cv;
 
 const int thresh = 100;
+const int max_thresh = 200;
 RNG rng(12345);
 
 void load_contours(Mat src) {
@@ -14,7 +15,7 @@ void load_contours(Mat src) {
   vector<vector<Point> > filtered_contours;
   vector<Vec4i> hierarchy;
 
-  Canny(src, canny_output, thresh, thresh, 3);
+  Canny(src, canny_output, thresh, max_thresh, 3);
 
   findContours(canny_output, contours, hierarchy, CV_RETR_TREE, 
       CV_CHAIN_APPROX_SIMPLE);
@@ -46,11 +47,14 @@ int main(int argc, char** argv) {
   cvtColor(src, src_gray, CV_BGR2GRAY);
   blur(src_gray, src_gray, Size(3,3));
 
+  Mat element(7, 7, CV_8U, Scalar(1));
+  erode(src_gray, src_gray, element);
+
   std::string window = "Source";
   namedWindow(window, CV_WINDOW_AUTOSIZE);
   imshow(window, src_gray);
 
-  load_contours(src);
+  load_contours(src_gray);
   waitKey(0);
 
   return 0;
