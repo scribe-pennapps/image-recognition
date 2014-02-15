@@ -11,6 +11,7 @@ RNG rng(12345);
 void load_contours(Mat src) {
   Mat canny_output;
   vector<vector<Point> > contours;
+  vector<vector<Point> > filtered_contours;
   vector<Vec4i> hierarchy;
 
   Canny(src, canny_output, thresh, thresh, 3);
@@ -18,13 +19,17 @@ void load_contours(Mat src) {
   findContours(canny_output, contours, hierarchy, CV_RETR_TREE, 
       CV_CHAIN_APPROX_SIMPLE);
 
+  for(int i = 0; i < contours.size(); i++) {
+    if(contourArea(contours[i]) > 500) {
+      filtered_contours.push_back(contours[i]);
+    }
+  }
+
   Mat drawing = Mat::zeros(canny_output.size(), CV_8UC3);
-  for(int i; i < contours.size(); i++) {
+  for(int i = 0; i < filtered_contours.size(); i++) {
     Scalar color = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), 
         rng.uniform(0, 255));
-    if(contourArea(contours[i]) > 500) {
-      drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
-    }
+    drawContours(drawing, filtered_contours, i, color, 2, 8, hierarchy, 0, Point());
   }
 
   namedWindow("Contours", CV_WINDOW_AUTOSIZE);
