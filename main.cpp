@@ -22,36 +22,29 @@ void thresh_callback(int, void* )
   // Detect edges using canny
   Canny( src_gray, canny_output, thresh, thresh*2, 3 );
   // Find contours
-  findContours( canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+  findContours(canny_output, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
+  std::cout << "SIZE: " << contours.size() << std::endl;
 
   // Draw contours
   Mat drawing = Mat::zeros( canny_output.size(), CV_8UC3 );
   for( int i = 0; i< contours.size(); i++ ){
        Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-        // circle( drawing, Point( i * 20, 0 ), 100 / (i+1),  color, 2, 8, 0 );
-       drawContours( drawing, contours, i, color, 2, 8, hierarchy, 0, Point() );
+
+       drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
   }
 
 
+  // Load contours into hierarchy.
   std::vector<Contour> ctrs;
-  for(int i = 1; i < contours.size() && i < 6; ++i){
+  for(int i = 1; i < contours.size() && i < 10; ++i)
     ctrs.push_back(Contour(contours[i]));
-    // contours[0][i], i,  Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ), 2, 8, 0 );
-  }
-
-
   Hierarchy *hier = new Hierarchy(Contour(contours[0]), ctrs);
   std::cout << hier->to_json() << std::endl;
 
-  for (int i = 0; i < ctrs.size(); ++i)
-    ctrs[i].draw(drawing);
-
-
   // Show in a window
-  namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+  namedWindow("Contours", CV_WINDOW_AUTOSIZE);
   imshow("Contours", drawing);
 }
-
 
 
 int main( int argc, char** argv )

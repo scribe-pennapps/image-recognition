@@ -45,19 +45,20 @@ std::string Hierarchy::to_json(Contour parent){
 	std::ostringstream str;
 	str << "{";
 	double xpos, ypos, width, height;
-	std::cout << "MAX X: " << self.get_max().x << std::endl;
-	std::cout << "MIN X: " << self.get_min().x << std::endl;
-	xpos  = self.get_min().x;
-	ypos  = self.get_max().y;
-	width = self.get_width();
-	height = self.get_height();
+	xpos  =  (self.get_min().x - parent.get_min().x) / parent.get_width();
+	ypos  =  (self.get_min().y - parent.get_min().y) / parent.get_height();
+	width  = (double) self.get_width() / parent.get_width();
+	height = (double) self.get_height() / parent.get_height();
 	str << "\"xpos\": "   << xpos   << ", ";
-	str << "\"ypos\": "   << ypos    << ", ";
+	str << "\"ypos\": "   << ypos   << ", ";
 	str << "\"width\": "  << width  << ", ";
 	str << "\"height\": " << height << ", ";
-	str << "[";
-	for (int i = 0; i < children.size(); ++i)
-		str << children[i].to_json();
+	str << "\"children\": [";
+	for (int i = 0; i < children.size(); ++i){
+		str << children[i].to_json(self);
+		if(i != children.size() -1)
+			str << ", ";
+	}
 	str << "]}";
 	return str.str();
 }
