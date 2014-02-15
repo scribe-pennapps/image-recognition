@@ -45,8 +45,8 @@ std::string Hierarchy::to_json(Contour parent){
 	std::ostringstream str;
 	str << "{";
 	double xpos, ypos, width, height;
-	xpos  =  (self.get_min().x - parent.get_min().x) / parent.get_width();
-	ypos  =  (self.get_min().y - parent.get_min().y) / parent.get_height();
+	xpos  =  (double) ((double) self.get_min().x - parent.get_min().x) / parent.get_width();
+	ypos  =  (double) ((double) self.get_min().y - parent.get_min().y) / parent.get_height();
 	width  = (double) self.get_width() / parent.get_width();
 	height = (double) self.get_height() / parent.get_height();
 	str << "\"xpos\": "   << xpos   << ", ";
