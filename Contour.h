@@ -3,6 +3,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
+#include <vector>
 
 #define UNKNOWN -1
 #define RECTANGLE 0
@@ -16,12 +17,14 @@ public:
 	cv::Point get_max();
 	unsigned int get_shape();
 	bool contains(Contour *other);
+	void draw(cv::Mat);
 private:
 	void gather_dimensions();
 	void determine_shape();
 	std::vector<cv::Point> points;
 	cv::Point max, min;
 	unsigned int shape;
+	cv::Scalar color;
 };
 
 #endif

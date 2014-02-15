@@ -76,6 +76,11 @@ std::vector<Contour *> ctrs;
     std::cout << "- w: " << ctrs[i]->get_max().y - ctrs[i]->get_min().y << "\n";
   }
 
+  for (int i = 0; i < ctrs.size(); ++i)
+  {
+    ctrs[i]->draw(drawing);
+  }
+
 
   /// Show in a window
   namedWindow( "Contours", CV_WINDOW_AUTOSIZE );

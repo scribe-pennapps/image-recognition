@@ -17,6 +17,8 @@ Contour::Contour(std::vector<cv::Point> input){
 	min.y = 10000;
 	max.x = -10000;
 	max.y = -10000;
+	cv::RNG rng(12345);
+	color = cv::Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
 	gather_dimensions();
 	determine_shape();
 }
@@ -69,7 +71,16 @@ void Contour::gather_dimensions(){
 
 /* ---------------------------------------------------------------- */
 void Contour::determine_shape(){
-
+	
 }
+
+/* ---------------------------------------------------------------- */
+void Contour::draw(cv::Mat mat){
+	std::vector<std::vector<cv::Point> > vec;
+	std::vector<cv::Vec4i> vec2;
+	vec.push_back(points);
+	drawContours( mat, vec, 0, color, 2, 8, vec2, 0, cv::Point());
+}
+
 
 #endif
