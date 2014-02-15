@@ -22,7 +22,18 @@ void load_contours(Mat src) {
 
   for(int i = 0; i < contours.size(); i++) {
     if(contourArea(contours[i]) > 500) {
-      filtered_contours.push_back(contours[i]);
+      Rect rect = boundingRect(contours[i]);
+      bool already_exists = false;
+      for(int j = 0; j < filtered_contours.size(); j++) {
+        Rect rect2 = boundingRect(filtered_contours[j]);
+        if(rect.x == rect2.x && rect.y == rect2.y) {
+          already_exists = true;
+        }
+      }
+
+      if(!already_exists) {
+        filtered_contours.push_back(contours[i]);
+      }
     }
   }
 
