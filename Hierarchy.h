@@ -7,11 +7,12 @@
 
 class Hierarchy {
 public:
-	Hierarchy(std::vector<std::vector<cv::Point> >);
+	Hierarchy(std::vector<Contour>);
 	~Hierarchy();
 	std::string to_json();
 private:
-	void add_child(std::vector<cv::Point> v;);
+	Hierarchy();
+	void add_child(Contour);
 	std::vector<Hierarchy> children;
 	Contour *self;
 };
