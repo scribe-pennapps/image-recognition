@@ -55,7 +55,8 @@ int main( int argc, char** argv )
   // Convert image to gray and blur it
   cvtColor( src, src_gray, CV_BGR2GRAY );
   blur( src_gray, src_gray, Size(3,3) );
-
+cv::Mat element(7,7,CV_8U,cv::Scalar(1));
+cv::erode(src_gray,src_gray,element);
   // Create Window
   std::string window = "Source";
   namedWindow(window, CV_WINDOW_AUTOSIZE );
