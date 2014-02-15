@@ -23,6 +23,8 @@ Contour::Contour(std::vector<cv::Point> input){
 	determine_shape();
 }
 
+Contour::Contour(){}
+
 /* ---------------------------------------------------------------- */
 Contour::~Contour(){
 	points.clear();
@@ -44,10 +46,10 @@ unsigned int Contour::get_shape(){
 }
 
 /* ---------------------------------------------------------------- */
-bool Contour::contains(Contour *other){
-	cv::Point omin = other->get_min();
-	cv::Point omax = other->get_max();
-	if(shape == RECTANGLE && other->get_shape() == RECTANGLE){
+bool Contour::contains(Contour other){
+	cv::Point omin = other.get_min();
+	cv::Point omax = other.get_max();
+	if(shape == RECTANGLE && other.get_shape() == RECTANGLE){
 		return min.x <= omin.x  &&
 			   min.y <= omin.y  &&
 			   max.x >= omax.x  &&
@@ -70,8 +72,18 @@ void Contour::gather_dimensions(){
 }
 
 /* ---------------------------------------------------------------- */
+unsigned int Contour::get_width(){
+	return max.x - min.x;
+}
+
+/* ---------------------------------------------------------------- */
+unsigned int Contour::get_height(){
+	return max.y - min.y;
+}
+
+/* ---------------------------------------------------------------- */
 void Contour::determine_shape(){
-	
+
 }
 
 /* ---------------------------------------------------------------- */

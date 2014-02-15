@@ -11,12 +11,15 @@
 
 class Contour {
 public:
+	Contour();
 	Contour(std::vector<cv::Point>);
 	~Contour();
 	cv::Point get_min();
 	cv::Point get_max();
+	unsigned int get_width();
+	unsigned int get_height();
 	unsigned int get_shape();
-	bool contains(Contour *other);
+	bool contains(Contour other);
 	void draw(cv::Mat);
 private:
 	void gather_dimensions();

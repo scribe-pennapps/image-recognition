@@ -2,6 +2,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include <iostream>
 #include "Contour.h"
+#include "Hierarchy.h"
 
 using namespace cv;
 using namespace std;
@@ -32,28 +33,26 @@ void thresh_callback(int, void* )
   }
 
 
-std::vector<Contour *> ctrs;
-  for(int i = 0; i < contours.size() && i < 3; ++i){
-    ctrs.push_back(new Contour(contours[i]));
+  std::vector<Contour> ctrs;
+  for(int i = 1; i < contours.size() && i < 6; ++i){
+    ctrs.push_back(Contour(contours[i]));
     // contours[0][i], i,  Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) ), 2, 8, 0 );
   }
 
-  for (int i = 0; i < ctrs.size(); ++i)
-  {
-    std::cout << "\nContour " << i << ":\n";
-    std::cout << "- x: " << ctrs[i]->get_min().x << "\n";
-    std::cout << "- y: " << ctrs[i]->get_min().y << "\n";
-    std::cout << "- w: " << ctrs[i]->get_max().x - ctrs[i]->get_min().x << "\n";
-    std::cout << "- w: " << ctrs[i]->get_max().y - ctrs[i]->get_min().y << "\n";
-  }
+
+  Hierarchy *hier = new Hierarchy(Contour(contours[0]), ctrs);
+  std::cout << hier->to_json() << std::endl;
 
   for (int i = 0; i < ctrs.size(); ++i)
-    ctrs[i]->draw(drawing);
+    ctrs[i].draw(drawing);
+
 
   // Show in a window
   namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-  imshow( "Contours", drawing );
+  imshow("Contours", drawing);
 }
+
+
 
 int main( int argc, char** argv )
 {
@@ -71,7 +70,6 @@ int main( int argc, char** argv )
 
   createTrackbar("Canny thresh:", "Source", &thresh, max_thresh, thresh_callback);
   thresh_callback(0, 0);
-
   waitKey(0);
   return(0);
 }
