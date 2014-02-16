@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
   cvtColor(src, src_gray, CV_BGR2GRAY);
   blur(src_gray, src_gray, Size(3,3));
 
-  Mat element(7, 7, CV_8U, Scalar(1));
+  Mat element(5, 5, CV_8U, Scalar(1));
   erode(src_gray, src_gray, element);
 
   std::string window = "Source";
