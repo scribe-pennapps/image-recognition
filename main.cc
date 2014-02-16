@@ -49,8 +49,8 @@ void load_contours(Mat src) {
         Point());
   }
 
-  //namedWindow("Contours", CV_WINDOW_AUTOSIZE);
-  //imshow("Contours", drawing);
+  namedWindow("Contours", CV_WINDOW_AUTOSIZE);
+  imshow("Contours", drawing);
 
   Element *elem = new Element(filtered_contours);
   std::cout << elem->to_json() << std::endl;
@@ -69,12 +69,12 @@ int main(int argc, char** argv) {
   Mat element(5, 5, CV_8U, Scalar(1));
   erode(src_gray, src_gray, element);
 
-  //std::string window = "Source";
-  //namedWindow(window, CV_WINDOW_AUTOSIZE);
-  //imshow(window, src_gray);
+  std::string window = "Source";
+  namedWindow(window, CV_WINDOW_AUTOSIZE);
+  imshow(window, src_gray);
 
   load_contours(src_gray);
-  //waitKey(0);
+  waitKey(0);
 
   return 0;
 }
