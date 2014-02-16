@@ -22,7 +22,10 @@ void load_contours(Mat src) {
       CV_CHAIN_APPROX_SIMPLE);
 
   for(int i = 0; i < contours.size(); i++) {
-    if(contourArea(contours[i]) > 500) {
+    double area = contourArea(contours[i]);
+    double len  = arcLength(contours[i], false);
+
+    if(area > 500  &&  len/area < .13) {
       Rect rect = boundingRect(contours[i]);
       bool already_exists = false;
       for(int j = 0; j < filtered_contours.size(); j++) {
