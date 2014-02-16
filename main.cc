@@ -2,6 +2,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <iostream>
 #include <stdio.h>
+#include "element.h"
 
 using namespace cv;
 
@@ -47,6 +48,9 @@ void load_contours(Mat src) {
 
   namedWindow("Contours", CV_WINDOW_AUTOSIZE);
   imshow("Contours", drawing);
+
+  Element *elem = new Element(filtered_contours);
+  std::cout << elem->to_json() << std::endl;
 }
 
 int main(int argc, char** argv) {

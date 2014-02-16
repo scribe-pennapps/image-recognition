@@ -2,50 +2,76 @@
 #define _ELEMENT_CPP_
 #include "element.h"
 
-// class Element {
-//   public:
-Element::Element(std::vector<std::vector<cv::Point> > cons, vector<cv::Vec4i> hierarchy){
-	init(cons, hierarchy, 0);
-}
-
-/* -------------------------------------------------------------------------------- */
-Element::Element(std::vector<std::vector<cv::Point> > cons, vector<cv::Vec4i> hierarchy, unsigned int ind){
-	init(cons, hierarchy, ind);
-}
-
-/* -------------------------------------------------------------------------------- */
-void Element::init(std::vector<std::vector<cv::Point> > cons, vector<cv::Vec4i> hierarchy, unsigned int ind){
-	// init current elem
-	cv::Rect rect = boundingRect(cons[ind]);
+Element::Element(std::vector<cv::Point> contour){
+	cv::Rect rect = boundingRect(contour);
 	x = rect.x;
 	y = rect.y;
 	w = rect.width;
 	h = rect.height;
+}
 
-	// recurse downward, initializes other elems in tree
-	// - next, prev, child, parent
-	int child_ind = hierarchy[ind][2];
-	while(hierarchy[child_ind][0] != -1){
-		children.push_back(new Element(cons, hierarchy, hierarchy[child_ind][0]));
+Element::Element(std::vector<std::vector<cv::Point> > contours){
+	cv::Rect rect = boundingRect(contours[0]);
+	x = rect.x;
+	y = rect.y;
+	w = rect.width;
+	h = rect.height;
+	for(int i = 1; i < contours.size(); ++i){
+		if(contours[i].size() > 0)
+			add_element(contours[i]);
 	}
 }
 
-/* -------------------------------------------------------------------------------- */
-std::string Element::to_json(){
-	
-}
-
-/* -------------------------------------------------------------------------------- */
 Element::~Element(){
 	children.clear();
 }
 
-/* -------------------------------------------------------------------------------- */
-//     std::string type;
-//     std::map<std::string,std::string> attrs;
-//     std::vector<Element> children;
-//     int x, y, w, h;
-// };
+std::string Element::to_json(){
+	return to_json(this);
+}
+
+std::string Element::to_json(Element *par){
+	std::ostringstream str;
+	str << "{";
+	double xpos, ypos, width, height;
+	xpos  =  (double) ((double) x - par->x) / par->w;
+	ypos  =  (double) ((double) y - par->y) / par->h;
+	width  = (double) w / par->w;
+	height = (double) h / par->h;
+	str << "\"xpos\": "   << xpos   << ", ";
+	str << "\"ypos\": "   << ypos   << ", ";
+	str << "\"width\": "  << width  << ", ";
+	str << "\"height\": " << height << ", ";
+	str << "\"children\": [";
+	for (int i = 0; i < children.size(); ++i){
+		str << children[i]->to_json(this);
+		if(i != children.size() -1)
+			str << ", ";
+	}
+	str << "]}";
+	return str.str();
+}
+
+
+void Element::add_element(std::vector<cv::Point> contour){
+	cv::Rect rect = boundingRect(contour);
+	for (int i = 0; i < children.size(); ++i)
+	{
+		if(rect.x > children[i]->x  &&
+		   rect.y > children[i]->y  &&
+		   rect.width  < children[i]->w  &&
+		   rect.height < children[i]->h){
+
+			children[i]->add_element(contour);
+			return;
+		}
+	}
+	children.push_back(new Element(contour));
+}
+// std::string type;
+// std::map<std::string,std::string> attrs;
+// std::vector<Element *> children;
+// int x, y, w, h;
 
 
 
